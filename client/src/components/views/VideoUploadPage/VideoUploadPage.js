@@ -4,6 +4,8 @@ import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { PlusOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
+
 const { Title } = Typography;
 const { TextArea } = Input;
 
@@ -36,8 +38,6 @@ function UploadVideoPage(props) {
   };
 
   const handleChangeDecsription = (event) => {
-    console.log(event.currentTarget.value);
-
     setDescription(event.currentTarget.value);
   };
 
@@ -80,6 +80,7 @@ function UploadVideoPage(props) {
 
     axios.post('/api/video/uploadVideo', variables).then((response) => {
       if (response.data.success) {
+        console.log(response.data);
         alert('video Uploaded Successfully');
         props.history.push('/');
       } else {
@@ -193,4 +194,4 @@ function UploadVideoPage(props) {
   );
 }
 
-export default UploadVideoPage;
+export default withRouter(UploadVideoPage);
