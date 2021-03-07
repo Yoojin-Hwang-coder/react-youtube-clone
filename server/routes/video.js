@@ -26,7 +26,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('file');
 
 //=================================
-//             User
+//             Video
 //=================================
 
 router.post('/uploadfiles', (req, res) => {
