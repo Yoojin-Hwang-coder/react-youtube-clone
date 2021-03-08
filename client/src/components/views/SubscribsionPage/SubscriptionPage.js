@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { Card, Avatar, Col, Typography, Row } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 const { Title } = Typography;
 const { Meta } = Card;
 
-function LandingPage() {
+function SubscriptionPage() {
   const [video, setVideo] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/video/getVideos').then((response) => {
-      if (response.data.success) {
-        console.log(response.data);
-        setVideo(response.data.videos);
-      } else {
-        alert('비디오를 가져오는데 실패 했습니다.');
-      }
-    });
+    const subscriptionVar = {
+      userFrom: localStorage.getItem('userId'),
+    };
+
+    axios
+      .post('/api/video/getSubscriptionVideos', subscriptionVar)
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response.data);
+          setVideo(response.data.videos);
+        } else {
+          alert('비디오를 가져오는데 실패 했습니다.');
+        }
+      });
   }, []);
 
   const renderCards = video.map((video, index) => {
@@ -78,4 +83,4 @@ function LandingPage() {
   );
 }
 
-export default withRouter(LandingPage);
+export default SubscriptionPage;
