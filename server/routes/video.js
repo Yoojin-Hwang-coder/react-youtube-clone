@@ -88,7 +88,7 @@ router.get('/getVideos', (req, res) => {
   Video.find()
     .populate('writer')
     .exec((err, videos) => {
-      if (err) return res.status(400).send.apply(err);
+      if (err) return res.status(400).send(err);
       res.status(200).json({ success: true, videos });
     });
 });
