@@ -3,6 +3,7 @@ import { List, Avatar, Row, Col } from 'antd';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import SideVideo from './Section/SideVideo';
+import Subscribe from './Section/Subscribe';
 
 function VideoDetailPage(props) {
   console.log(props);
@@ -38,7 +39,14 @@ function VideoDetailPage(props) {
               controls
             ></video>
 
-            <List.Item actions>
+            <List.Item
+              actions={[
+                <Subscribe
+                  userTo={Video.writer._id}
+                  userFrom={localStorage.getItem('userId')}
+                />,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={Video.writer && Video.writer.image} />}
                 title={<a href='https://ant.design'>{Video.title}</a>}
