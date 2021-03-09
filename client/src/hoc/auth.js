@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
+
 import { useDispatch } from 'react-redux';
 import { auth } from '../_actions/user_action';
 
