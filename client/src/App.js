@@ -32,7 +32,7 @@ function App() {
           <Route
             exact
             path='/subscription'
-            component={Auth(SubscriptionPage, null)}
+            component={Auth(SubscriptionPage, true)}
           />
         </Switch>
       </div>

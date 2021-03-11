@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
 import { withRouter } from 'react-router-dom';
 function LoginPage(props) {
-  console.log(props);
   const dispatch = useDispatch();
 
   const [Email, setEmail] = useState('');
@@ -28,6 +27,7 @@ function LoginPage(props) {
 
     dispatch(loginUser(body)).then((response) => {
       if (response.payload.loginSuccess) {
+        window.localStorage.setItem('userId', response.payload.userId);
         props.history.push('/');
       } else {
         alert('Error˝');

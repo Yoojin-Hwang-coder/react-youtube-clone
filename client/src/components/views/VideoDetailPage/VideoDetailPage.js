@@ -4,6 +4,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import SideVideo from './Section/SideVideo';
 import Subscribe from './Section/Subscribe';
+import Commemt from './Section/Comment';
 
 function VideoDetailPage(props) {
   console.log(props);
@@ -26,6 +27,13 @@ function VideoDetailPage(props) {
   }, []);
 
   if (Video.writer) {
+    const subscribeButton = Video.writer._id !==
+      localStorage.getItem('userId') && (
+      <Subscribe
+        userTo={Video.writer._id}
+        userFrom={localStorage.getItem('userId')}
+      />
+    );
     return (
       <Row>
         <Col lg={18} xs={24}>
@@ -39,20 +47,14 @@ function VideoDetailPage(props) {
               controls
             ></video>
 
-            <List.Item
-              actions={[
-                <Subscribe
-                  userTo={Video.writer._id}
-                  userFrom={localStorage.getItem('userId')}
-                />,
-              ]}
-            >
+            <List.Item actions={[subscribeButton]}>
               <List.Item.Meta
                 avatar={<Avatar src={Video.writer && Video.writer.image} />}
                 title={<a href='https://ant.design'>{Video.title}</a>}
                 description={Video.description}
               />
             </List.Item>
+            <Commemt />
           </div>
         </Col>
         <Col lg={6} xs={24}>
