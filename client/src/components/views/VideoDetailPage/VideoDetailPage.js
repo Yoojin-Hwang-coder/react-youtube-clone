@@ -4,27 +4,38 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import SideVideo from './Section/SideVideo';
 import Subscribe from './Section/Subscribe';
-import Commemt from './Section/Comment';
+import Comment from './Section/Comment';
 
 function VideoDetailPage(props) {
-  console.log(props);
   const videoId = props.match.params.videoId;
   const [Video, setVideo] = useState([]);
+  const [Comments, setComments] = useState([]);
 
-  const videoVariable = {
+  const Variable = {
     videoId: videoId,
   };
 
   useEffect(() => {
-    axios.post('/api/video/getVideo', videoVariable).then((response) => {
+    axios.post('/api/video/getVideo', Variable).then((response) => {
       if (response.data.success) {
-        console.log(response.data.video);
         setVideo(response.data.video);
       } else {
         alert('Failed to get video Info');
       }
     });
+
+    axios.post('/api/comment/getComments', Variable).then((response) => {
+      if (response.data.success) {
+        setComments(response.data.comments);
+      } else {
+        alert('코멘트 정보들을 가져오는데 실패했습니다.');
+      }
+    });
   }, []);
+
+  const refreshFunction = (newComment) => {
+    setComments(Comments.concat(newComment));
+  };
 
   if (Video.writer) {
     const subscribeButton = Video.writer._id !==
@@ -49,12 +60,19 @@ function VideoDetailPage(props) {
 
             <List.Item actions={[subscribeButton]}>
               <List.Item.Meta
-                avatar={<Avatar src={Video.writer && Video.writer.image} />}
+                avatar={
+                  <Avatar src={Video.writer.name && Video.writer.image} />
+                }
                 title={<a href='https://ant.design'>{Video.title}</a>}
+                name={Video.writer.name}
                 description={Video.description}
               />
             </List.Item>
-            <Commemt />
+            <Comment
+              refreshFunction={refreshFunction}
+              commentLists={Comments}
+              postId={videoId}
+            />
           </div>
         </Col>
         <Col lg={6} xs={24}>
