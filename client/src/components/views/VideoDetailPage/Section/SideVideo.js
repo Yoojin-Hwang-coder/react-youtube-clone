@@ -7,7 +7,6 @@ function SideVideo() {
   useEffect(() => {
     axios.get('/api/video/getVideos').then((response) => {
       if (response.data.success) {
-        console.log(response.data);
         setSideVideos(response.data.videos);
       } else {
         alert('비디오를 가져오는데 실패 했습니다.');
