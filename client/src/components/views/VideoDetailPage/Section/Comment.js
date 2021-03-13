@@ -47,11 +47,13 @@ function Comment(props) {
             !comment.responseTo && (
               <React.Fragment>
                 <SingleComment
+                  key={index}
                   refreshFunction={props.refreshFunction}
                   comment={comment}
                   postId={videoId}
                 />
                 <ReplyComment
+                  refreshFunction={props.refreshFunction}
                   parentCommentId={comment._id}
                   commentLists={props.commentLists}
                   postId={videoId}

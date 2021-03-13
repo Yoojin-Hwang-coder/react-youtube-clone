@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import SideVideo from './Section/SideVideo';
 import Subscribe from './Section/Subscribe';
 import Comment from './Section/Comment';
+import LikeDislikes from './/Section/LikeDislikes';
 
 function VideoDetailPage(props) {
   const videoId = props.match.params.videoId;
@@ -58,7 +59,16 @@ function VideoDetailPage(props) {
               controls
             ></video>
 
-            <List.Item actions={[subscribeButton]}>
+            <List.Item
+              actions={[
+                <LikeDislikes
+                  video
+                  userId={localStorage.getItem('userId')}
+                  videoId={videoId}
+                />,
+                subscribeButton,
+              ]}
+            >
               <List.Item.Meta
                 avatar={
                   <Avatar src={Video.writer.name && Video.writer.image} />
