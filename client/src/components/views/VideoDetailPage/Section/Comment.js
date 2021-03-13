@@ -1,34 +1,34 @@
-import Axios from 'axios';
+import React, { useState } from 'react';
+import { Button, Input } from 'antd';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
 import ReplyComment from './ReplyComment';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+const { TextArea } = Input;
 
-function Comment(props) {
+function Comments(props) {
   const user = useSelector((state) => state.user);
-  const videoId = props.postId;
-
-  const [CommentValue, setCommentValue] = useState('');
+  const [Comment, setComment] = useState('');
 
   const handleChange = (e) => {
-    setCommentValue(e.target.value);
+    setComment(e.currentTarget.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const variable = {
-      content: CommentValue,
+
+    const variables = {
+      content: Comment,
       writer: user.userData._id,
-      postId: videoId,
+      postId: props.postId,
     };
 
-    Axios.post('/api/comment/commentSave', variable).then((response) => {
+    axios.post('/api/comment/saveComment', variables).then((response) => {
       if (response.data.success) {
-        setCommentValue('');
+        setComment('');
         props.refreshFunction(response.data.result);
       } else {
-        alert('코멘트를 저장하지 못했습니다.');
+        alert('Failed to save Comment');
       }
     });
   };
@@ -36,49 +36,45 @@ function Comment(props) {
   return (
     <div>
       <br />
-      <p>Replies</p>
+      <p> replies</p>
       <hr />
+      {/* Comment Lists  */}
 
-      {/* Comment Lists */}
-
-      {props.commentLists &&
-        props.commentLists.map(
+      {props.CommentLists &&
+        props.CommentLists.map(
           (comment, index) =>
             !comment.responseTo && (
               <React.Fragment>
                 <SingleComment
-                  key={index}
-                  refreshFunction={props.refreshFunction}
                   comment={comment}
-                  postId={videoId}
+                  postId={props.postId}
+                  refreshFunction={props.refreshFunction}
                 />
                 <ReplyComment
-                  refreshFunction={props.refreshFunction}
+                  CommentLists={props.CommentLists}
+                  postId={props.postId}
                   parentCommentId={comment._id}
-                  commentLists={props.commentLists}
-                  postId={videoId}
+                  refreshFunction={props.refreshFunction}
                 />
               </React.Fragment>
             )
         )}
 
       {/* Root Comment Form */}
-
       <form style={{ display: 'flex' }} onSubmit={onSubmit}>
-        <textarea
+        <TextArea
           style={{ width: '100%', borderRadius: '5px' }}
           onChange={handleChange}
-          value={CommentValue}
-          placeholder='Write your comment'
+          value={Comment}
+          placeholder='write some comments'
         />
         <br />
-        <button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>
-          {' '}
+        <Button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );
 }
 
-export default withRouter(Comment);
+export default Comments;

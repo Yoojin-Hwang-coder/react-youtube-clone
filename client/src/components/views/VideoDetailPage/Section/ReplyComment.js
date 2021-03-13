@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import SingleComment from './SingleComment';
 
 function ReplyComment(props) {
-  const videoId = props.postId;
   const [ChildCommentNumber, setChildCommentNumber] = useState(0);
   const [OpenReplyComments, setOpenReplyComments] = useState(false);
-
   useEffect(() => {
-    console.log(props.commentLists);
     let commentNumber = 0;
-    props.commentLists.map((comment) => {
+    props.CommentLists.map((comment) => {
       if (comment.responseTo === props.parentCommentId) {
         commentNumber++;
       }
@@ -17,26 +14,26 @@ function ReplyComment(props) {
     setChildCommentNumber(commentNumber);
   }, [props.CommentLists, props.parentCommentId]);
 
-  const renderReplyComment = (parentCommentId) => {
-    return props.commentLists.map((comment, index) => (
+  let renderReplyComment = (parentCommentId) =>
+    props.CommentLists.map((comment, index) => (
       <React.Fragment>
         {comment.responseTo === parentCommentId && (
           <div style={{ width: '80%', marginLeft: '40px' }}>
             <SingleComment
-              refreshFunction={props.refreshFunction}
               comment={comment}
               postId={props.postId}
+              refreshFunction={props.refreshFunction}
             />
             <ReplyComment
-              commentList={props.commentLists}
-              postId={props.postId}
+              CommentLists={props.CommentLists}
               parentCommentId={comment._id}
+              postId={props.postId}
+              refreshFunction={props.refreshFunction}
             />
           </div>
         )}
       </React.Fragment>
     ));
-  };
 
   const handleChange = () => {
     setOpenReplyComments(!OpenReplyComments);
@@ -46,12 +43,13 @@ function ReplyComment(props) {
     <div>
       {ChildCommentNumber > 0 && (
         <p
-          style={{ fontSize: '14px', maring: '0', color: 'gray' }}
+          style={{ fontSize: '14px', margin: 0, color: 'gray' }}
           onClick={handleChange}
         >
-          View {ChildCommentNumber} more Comment(s)
+          View {ChildCommentNumber} more comment(s)
         </p>
       )}
+
       {OpenReplyComments && renderReplyComment(props.parentCommentId)}
     </div>
   );

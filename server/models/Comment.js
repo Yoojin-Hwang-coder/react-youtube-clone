@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 const commentSchema = mongoose.Schema(
   {
     writer: {
@@ -21,6 +22,6 @@ const commentSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Comment = mongoose.model('comment', commentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = { Comment };

@@ -1,51 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { List, Avatar, Row, Col } from 'antd';
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
 import SideVideo from './Section/SideVideo';
-import Subscribe from './Section/Subscribe';
-import Comment from './Section/Comment';
-import LikeDislikes from './/Section/LikeDislikes';
+import Subscriber from './Section/Subscribe';
+import Comments from './Section/Comment';
+import LikeDislikes from './Section/LikeDislikes';
+import { withRouter } from 'react-router-dom';
 
-function VideoDetailPage(props) {
+function DetailVideoPage(props) {
   const videoId = props.match.params.videoId;
   const [Video, setVideo] = useState([]);
-  const [Comments, setComments] = useState([]);
+  const [CommentLists, setCommentLists] = useState([]);
 
-  const Variable = {
+  const videoVariable = {
     videoId: videoId,
   };
 
   useEffect(() => {
-    axios.post('/api/video/getVideo', Variable).then((response) => {
+    axios.post('/api/video/getVideo', videoVariable).then((response) => {
       if (response.data.success) {
+        console.log(response.data.video);
         setVideo(response.data.video);
       } else {
         alert('Failed to get video Info');
       }
     });
 
-    axios.post('/api/comment/getComments', Variable).then((response) => {
+    axios.post('/api/comment/getComments', videoVariable).then((response) => {
       if (response.data.success) {
-        setComments(response.data.comments);
+        console.log('response.data.comments', response.data.comments);
+        setCommentLists(response.data.comments);
       } else {
-        alert('코멘트 정보들을 가져오는데 실패했습니다.');
+        alert('Failed to get video Info');
       }
     });
   }, []);
 
-  const refreshFunction = (newComment) => {
-    setComments(Comments.concat(newComment));
+  const updateComment = (newComment) => {
+    setCommentLists(CommentLists.concat(newComment));
   };
 
   if (Video.writer) {
-    const subscribeButton = Video.writer._id !==
-      localStorage.getItem('userId') && (
-      <Subscribe
-        userTo={Video.writer._id}
-        userFrom={localStorage.getItem('userId')}
-      />
-    );
     return (
       <Row>
         <Col lg={18} xs={24}>
@@ -63,30 +58,31 @@ function VideoDetailPage(props) {
               actions={[
                 <LikeDislikes
                   video
-                  userId={localStorage.getItem('userId')}
                   videoId={videoId}
+                  userId={localStorage.getItem('userId')}
                 />,
-                subscribeButton,
+                <Subscriber
+                  userTo={Video.writer._id}
+                  userFrom={localStorage.getItem('userId')}
+                />,
               ]}
             >
               <List.Item.Meta
-                avatar={
-                  <Avatar src={Video.writer.name && Video.writer.image} />
-                }
+                avatar={<Avatar src={Video.writer && Video.writer.image} />}
                 title={<a href='https://ant.design'>{Video.title}</a>}
-                name={Video.writer.name}
                 description={Video.description}
               />
+              <div></div>
             </List.Item>
-            <Comment
-              refreshFunction={refreshFunction}
-              commentLists={Comments}
-              postId={videoId}
+
+            <Comments
+              CommentLists={CommentLists}
+              postId={Video._id}
+              refreshFunction={updateComment}
             />
           </div>
         </Col>
         <Col lg={6} xs={24}>
-          <div style={{ marginTop: '3rem' }} />
           <SideVideo />
         </Col>
       </Row>
@@ -96,4 +92,4 @@ function VideoDetailPage(props) {
   }
 }
 
-export default withRouter(VideoDetailPage);
+export default withRouter(DetailVideoPage);
