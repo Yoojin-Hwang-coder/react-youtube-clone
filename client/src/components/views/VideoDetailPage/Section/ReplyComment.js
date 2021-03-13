@@ -25,11 +25,11 @@ function ReplyComment(props) {
             <SingleComment
               refreshFunction={props.refreshFunction}
               comment={comment}
-              postId={videoId}
+              postId={props.postId}
             />
             <ReplyComment
               commentList={props.commentLists}
-              postId={videoId}
+              postId={props.postId}
               parentCommentId={comment._id}
             />
           </div>

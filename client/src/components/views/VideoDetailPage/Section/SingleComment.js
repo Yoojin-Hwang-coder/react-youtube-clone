@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import LikeDislikes from './LikeDislikes';
 
 function SingleComment(props) {
   const [OpneReply, setOpenReply] = useState(false);
   const [CommentValue, setCommentValue] = useState('');
-  const videoId = props.postId;
+
   const user = useSelector((state) => state.user);
 
   const onHandleChange = (e) => {
@@ -24,7 +25,7 @@ function SingleComment(props) {
     const variable = {
       content: CommentValue,
       writer: user.userData._id,
-      postId: videoId,
+      postId: props.postId,
       responseTo: props.comment._id,
     };
 
@@ -41,6 +42,10 @@ function SingleComment(props) {
   };
 
   const actions = [
+    <LikeDislikes
+      userId={localStorage.getItem('userId')}
+      commentId={props.comment._id}
+    />,
     <span onClick={onClickReplyOpen} key='comment-basic-reply-to'>
       Relpy to
     </span>,
