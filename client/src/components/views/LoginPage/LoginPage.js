@@ -30,7 +30,7 @@ function LoginPage(props) {
         window.localStorage.setItem('userId', response.payload.userId);
         props.history.push('/');
       } else {
-        alert('Error˝');
+        alert('Error');
       }
     });
   };

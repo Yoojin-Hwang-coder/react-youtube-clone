@@ -46,8 +46,8 @@ router.post('/login', (req, res) => {
 
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);
-
-        res.cookie('w_auth', user.token).status(200).json({
+        res.cookie('x_authExp', user.tokenExp);
+        res.cookie('x_auth', user.token).status(200).json({
           loginSuccess: true,
           userId: user._id,
         });
